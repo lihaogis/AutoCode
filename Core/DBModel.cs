@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Core
 {
-    abstract class DBModel
+    public abstract class DBModel
     {
         string connectString;
 
@@ -15,9 +15,17 @@ namespace Core
             set { connectString = value; }
         }
 
+
         public virtual bool GetStatue()
         {
             return false;
         }
+
+
+        public virtual void BeginTask()
+        {
+
+        }
+
     }
 }

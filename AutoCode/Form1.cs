@@ -18,12 +18,14 @@ namespace AutoCode
             InitializeComponent();
         }
 
-        string connectionString = "";
-        string dbType = "";
+        string connectString = "SERVER=localhost;PORT=5432;DATABASE=MYDB;USER ID=postgres;PASSWORD=meitu001";
+        string dbType = "PostgreSQL";
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            Core.DBModel dbModel = Core.DBFactory.createDBModel(dbType, connectString);
+            dbModel.GetStatue();
+            dbModel.BeginTask();
         }
 
         /// <summary>
@@ -33,9 +35,9 @@ namespace AutoCode
         /// <param name="e"></param>
         private void btnBeginTask_Click(object sender, EventArgs e)
         {
-            if (connectionString != "")
+            if (connectString != "")
             {
-                BeginTask(connectionString);
+                BeginTask(connectString);
             }
         }
 
@@ -48,8 +50,8 @@ namespace AutoCode
         {
             if (txtIp.Text.Trim() != "" && txtPort.Text.Trim() != "" && txtBDName.Text.Trim() != "" && txtUserName.Text.Trim() != "" && txtUserPsw.Text.Trim() != "")
             {
-                connectionString = "SERVER=" + txtIp.Text.Trim() + ";PORT=" + txtPort.Text.Trim() + ";DATABASE=" + txtBDName.Text.Trim() + ";USER ID=" + txtUserName.Text.Trim() + ";PASSWORD=" + txtUserPsw.Text.Trim() + "";
-                NpgsqlConnection connection = new NpgsqlConnection(connectionString);
+                connectString = "SERVER=" + txtIp.Text.Trim() + ";PORT=" + txtPort.Text.Trim() + ";DATABASE=" + txtBDName.Text.Trim() + ";USER ID=" + txtUserName.Text.Trim() + ";PASSWORD=" + txtUserPsw.Text.Trim() + "";
+                NpgsqlConnection connection = new NpgsqlConnection(connectString);
                 try
                 {
                     connection.Open();
