@@ -42,7 +42,7 @@ namespace Core
         public override void BeginTask()
         {
             //获取所有数据表
-            string str_tableNames = "select tablename from pg_tables where schemaname='public'";
+            string str_tableNames = "select relname as tablename, cast(obj_description(relfilenode,'pg_class') as varchar) as comment from pg_class a left join  pg_namespace  b on a.relnamespace =b.oid where b.nspname = 'public' and a .reltype>0 and relkind ='r' order by a.relname";
             NpgsqlConnection conn = new NpgsqlConnection(this.ConnectString);
             NpgsqlDataAdapter adTables = new NpgsqlDataAdapter(str_tableNames, conn);
             DataSet dsTables = new System.Data.DataSet();
@@ -60,24 +60,26 @@ namespace Core
                 NpgsqlDataAdapter adCols = new NpgsqlDataAdapter(str_cols, conn);
                 if (dsTables.Tables["t_cols"] != null) dsTables.Tables["t_cols"].Clear();
                 adCols.Fill(dsTables, "t_cols");
+                CreateModel(table_name, dsTables);
             }
         }
 
         string cur_dir = System.Environment.CurrentDirectory;
 
-        void GenModel(string table_name, DataSet ds)
+        void CreateModel(string table_name, DataSet ds)
         {
-            Directory.CreateDirectory(cur_dir + "/Model");
+            Directory.CreateDirectory(cur_dir + "/Models");
             StringBuilder sb = new StringBuilder();
             sb.Append(@"using System;
-                        using System.Collections.Generic;
-                        using System.Linq;
-                        using System.Text;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-                        namespace Models
-                     {");
+namespace Models
+{");
             sb.Append("\r\n" + @"    public class " + table_name + @"
-                     {");
+    {");
+            sb.Append("\r\n");
             sb.Append("\r\n");
             for (int i = 0; i < ds.Tables["t_cols"].Rows.Count; i++)
             {
@@ -87,26 +89,26 @@ namespace Core
                 switch (col_type)
                 {
                     case "int8":
-                        sb.Append("long " + col_name + " {set;get;}\r\n");
+                        sb.Append("long " + col_name + " { set; get; }\r\n");
                         break;
                     case "varchar":
                     case "bpchar":
-                        sb.Append("string " + col_name + " {set;get;}\r\n");
+                        sb.Append("string " + col_name + " { set; get; }\r\n");
                         break;
                     case "timestamp":
-                        sb.Append("DateTime " + col_name + " {set;get;}\r\n");
+                        sb.Append("DateTime " + col_name + " { set; get; }\r\n");
                         break;
                     case "int4":
                     case "int2":
-                        sb.Append("int " + col_name + " {set;get;}\r\n");
+                        sb.Append("int " + col_name + " { set; get; }\r\n");
                         break;
                     default:
                         break;
                 }
             }
             sb.Append(@"    }
-                }");
-            File.WriteAllText(cur_dir + "/Model/" + table_name + ".cs", sb.ToString());
+}");
+            File.WriteAllText(cur_dir + "/Models/" + table_name + ".cs", sb.ToString());
         }
 
 
