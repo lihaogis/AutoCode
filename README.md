@@ -6,11 +6,13 @@
 ### 功能与进度
 
 - [x] 支持PostgreSQL数据库三层生成
-- [x] 生成LayerUI后台管理界面
+- [ ] 支持SQLite数据库三层生成
 - [ ] 支持Oracle数据库三层生成
 - [ ] 支持MySQL数据库三层生成
-- [ ] 支持SqlServer数据库三层生成
+- [ ] 支持SQL Server数据库三层生成
 - [ ] 自动生成网站后台
+- [x] 支持LayerUI框架后台管理界面
+- [ ] 支持Bootstrap框架后台管理界面
 
 &nbsp;
 
@@ -20,6 +22,8 @@
 
 
 &nbsp;
+
+### 更新日志
 
 
 
