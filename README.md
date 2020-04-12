@@ -1,5 +1,5 @@
 # AutoCode
-自动生成C#三层代码框架工具，支持常用的关系型数据库：PostgreSQL、Oracle、MySQL、SqlServer
+自动生成C#三层代码框架工具，支持常用的关系型数据库：PostgreSQL、SQLite、Oracle、MySQL、SqlServer
 
 &nbsp;
 
