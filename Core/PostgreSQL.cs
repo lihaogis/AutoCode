@@ -15,8 +15,6 @@ namespace Core
             this.ConnectString = connectString;
         }
 
-
-
         public override bool GetStatue()
         {
             NpgsqlConnection connection = new NpgsqlConnection(this.ConnectString);
@@ -63,6 +61,7 @@ namespace Core
                 if (dsTables.Tables["t_cols"] != null) dsTables.Tables["t_cols"].Clear();
                 adCols.Fill(dsTables, "t_cols");
                 CreateModel(table_name, table_comment, dsTables);
+                CreateDAL(table_name, table_comment, dsTables);
             }
         }
 
@@ -73,8 +72,8 @@ namespace Core
         /// <summary>
         /// 创建Models层
         /// </summary>
-        /// <param name="table_name"></param>
-        /// <param name="table_comment"></param>
+        /// <param name="table_name">表名称</param>
+        /// <param name="table_comment">表说明</param>
         /// <param name="ds"></param>
         private void CreateModel(string table_name, string table_comment, DataSet ds)
         {
@@ -131,44 +130,48 @@ namespace Models
             File.WriteAllText(cur_dir + "/Models/" + table_name + ".cs", sb.ToString());
         }
 
-
-        void GenDAL(string table_name, DataSet ds)
+        /// <summary>
+        /// 创建DAL层
+        /// </summary>
+        /// <param name="table_name">表名称</param>
+        /// <param name="table_comment">表说明</param>
+        /// <param name="ds"></param>
+        private void CreateDAL(string table_name, string table_comment, DataSet ds)
         {
             DirectoryInfo di = Directory.CreateDirectory(cur_dir + "/DAL");
             string key_col_name = ds.Tables["t_cols"].Rows[0]["attname"].ToString();
             string key_col_type = ds.Tables["t_cols"].Rows[0]["typname"].ToString();
-            //key_col_type =GetCSharpType(key_col_type );
             StringBuilder sb = new StringBuilder();
             sb.Append(@"using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Model = sqmModel;
+using Models;
 using System.Collections;
 using System.Data;
 using Npgsql;
 using NpgsqlTypes;
 using NpgsqlDB;
-");
-            sb.Append(@"namespace sqmDAL
+
+namespace DAL
 {");
             sb.Append("\r\n" + @"    public class " + table_name);
-            sb.Append(@"    {
+            sb.Append("\r\n" + @"    {
         /// <summary>
         /// 是否存在该记录
         /// </summary>");
             sb.Append("\r\n        public bool Exists(" + GetCSharpType(key_col_type) + " " + key_col_name + ")");
-            sb.Append("\r\n            {");
-            sb.Append("\r\n                StringBuilder strSql = new StringBuilder();");
-            sb.Append("\r\n                strSql.Append(\"select count(1) from " + table_name + "\");");
-            sb.Append("\r\n                strSql.Append(\" where " + key_col_name + "=@" + key_col_name + "\");");
-            sb.Append("\r\n                NpgsqlParameter[] parameters = {");
-            sb.Append("\r\n					new NpgsqlParameter(\"@" + key_col_name + "\", NpgsqlDbType." + GetNpgsqlType(key_col_type) + ")};");
-            sb.Append("\r\n                parameters[0].Value = " + key_col_name + ";");
-            sb.Append("\r\n                return DbHelperSQL.Exists(strSql.ToString(), parameters);");
-            sb.Append("\r\n            }");
+            sb.Append("\r\n        {");
+            sb.Append("\r\n            StringBuilder strSql = new StringBuilder();");
+            sb.Append("\r\n            strSql.Append(\"select count(1) from " + table_name + "\");");
+            sb.Append("\r\n            strSql.Append(\" where " + key_col_name + "=@" + key_col_name + "\");");
+            sb.Append("\r\n            NpgsqlParameter[] parameters = {");
+            sb.Append("\r\n			   new NpgsqlParameter(\"@" + key_col_name + "\", NpgsqlDbType." + GetNpgsqlType(key_col_type) + ")};");
+            sb.Append("\r\n            parameters[0].Value = " + key_col_name + ";");
+            sb.Append("\r\n            return DbHelperSQL.Exists(strSql.ToString(), parameters);");
+            sb.Append("\r\n        }");
 
-            sb.Append(@"
+            sb.Append("\r\n" + @"
         /// <summary>
         /// 增加一条数据
         /// </summary>");
@@ -267,6 +270,7 @@ using NpgsqlDB;
                 return Convert.ToInt64(obj);
             }
         }
+
         /// <summary>
         /// 更新一条数据
         /// </summary>
@@ -314,6 +318,7 @@ using NpgsqlDB;
 				return false;
 			}
         }
+
         /// <summary>
         /// 删除一条数据
         /// </summary>
@@ -335,7 +340,6 @@ using NpgsqlDB;
 				return false;
 			}
         }
-
 
         /// <summary>
         /// 得到一个对象实体
@@ -368,7 +372,6 @@ using NpgsqlDB;
             }
         }
 
-
         /// <summary>
         /// 获得数据列表
         /// </summary>
@@ -384,7 +387,6 @@ using NpgsqlDB;
             sb.Append("\r\n" + @"            }
             return DbHelperSQL.Query(strSql.ToString());
         }
-
 
         /// <summary>
         /// 获得数据列表
@@ -405,15 +407,15 @@ using NpgsqlDB;
 		/// </summary>
 		public DataSet GetList(int Top,string strWhere,string filedOrder)
 		{
-			StringBuilder strSql=new StringBuilder();");
+			StringBuilder strSql = new StringBuilder();");
             sb.Append("\r\n			strSql.Append(\"select \");");
-            sb.Append("\r\n" + @"			if(Top>0)
+            sb.Append("\r\n" + @"			if(Top > 0)
 			{");
             sb.Append("\r\n				strSql.Append(\" top \"+Top.ToString());");
             sb.Append("\r\n			}");
             sb.Append("\r\n			strSql.Append(\" * \");");
             sb.Append("\r\n			strSql.Append(\" FROM " + table_name + " \");");
-            sb.Append("\r\n			if(strWhere.Trim()!=\"\")");
+            sb.Append("\r\n			if(strWhere.Trim() != \"\")");
             sb.Append("\r\n			{");
             sb.Append("\r\n				strSql.Append(\" where \"+strWhere);");
             sb.Append("\r\n			}");
@@ -427,7 +429,64 @@ using NpgsqlDB;
             File.WriteAllText(di.FullName + "/" + table_name + ".cs", sb.ToString());
         }
 
-        #endregion 
+        private string GetNpgsqlType(string dbType)
+        {
+            switch (dbType)
+            {
+                case "int8":
+                    return "Bigint";
+                case "varchar":
+                case "bpchar":
+                    return "Varchar";
+                case "timestamp":
+                    return "TimestampTZ";
+                case "int4":
+                case "int2":
+                    return "Integer";
+                default:
+                    return "";
+            }
+        }
+
+        private string GetCSharpType(string dbType)
+        {
+            switch (dbType)
+            {
+                case "int8":
+                    return "long";
+                case "varchar":
+                case "bpchar":
+                    return "string";
+                case "timestamp":
+                    return "DateTime";
+                case "int4":
+                case "int2":
+                    return "int";
+                default:
+                    return "";
+            }
+        }
+
+        private string GetConvertType(string dbType)
+        {
+            switch (dbType)
+            {
+                case "int8":
+                    return "ToInt64";
+                case "varchar":
+                case "bpchar":
+                    return "ToString";
+                case "timestamp":
+                    return "ToDateTime";
+                case "int4":
+                case "int2":
+                    return "ToInt32";
+                default:
+                    return "";
+            }
+        }
+
+        #endregion
 
 
 
