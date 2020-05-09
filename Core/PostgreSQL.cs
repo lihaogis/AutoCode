@@ -77,6 +77,10 @@ namespace Core
         /// <param name="ds"></param>
         private void CreateModel(string table_name, string table_comment, DataSet ds)
         {
+            if (table_name == "dm_organization_structure")
+            {
+                Console.WriteLine("dd");
+            }
             Directory.CreateDirectory(cur_dir + "/Model");
             StringBuilder sb = new StringBuilder();
             sb.Append(@"using System;
@@ -116,6 +120,7 @@ namespace Model
                             sb.Append("DateTime " + col_name + " { set; get; }\r\n");
                             break;
                         case "int4":
+                        case "numeric":
                         case "int2":
                             sb.Append("int " + col_name + " { set; get; }\r\n");
                             break;
@@ -657,6 +662,7 @@ namespace BLL
                 case "timestamp":
                     return "TimestampTZ";
                 case "int4":
+                case "numeric":
                 case "int2":
                     return "Integer";
                 default:
@@ -676,6 +682,7 @@ namespace BLL
                 case "timestamp":
                     return "DateTime";
                 case "int4":
+                case "numeric":
                 case "int2":
                     return "int";
                 default:
@@ -695,6 +702,7 @@ namespace BLL
                 case "timestamp":
                     return "ToDateTime";
                 case "int4":
+                case "numeric":
                 case "int2":
                     return "ToInt32";
                 default:
