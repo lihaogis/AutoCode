@@ -15,6 +15,11 @@ namespace Core
             this.ConnectString = connectString;
         }
 
+
+        /// <summary>
+        /// 获取数据库连接状态
+        /// </summary>
+        /// <returns></returns>
         public override bool GetStatue()
         {
             NpgsqlConnection connection = new NpgsqlConnection(this.ConnectString);
@@ -709,6 +714,10 @@ namespace BLL
                     return "";
             }
         }
+
+        #endregion
+
+        #region 创建一般处理程序
 
         #endregion
 

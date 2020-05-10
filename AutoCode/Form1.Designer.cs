@@ -140,11 +140,11 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(62, 195);
+            this.label6.Location = new System.Drawing.Point(27, 195);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(41, 12);
+            this.label6.Size = new System.Drawing.Size(65, 12);
             this.label6.TabIndex = 10;
-            this.label6.Text = "密码：";
+            this.label6.Text = "连接密码：";
             // 
             // btnBeginTask
             // 

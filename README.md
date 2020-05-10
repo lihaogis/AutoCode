@@ -11,8 +11,8 @@
 - [ ] 支持MySQL数据库三层生成
 - [ ] 支持SQL Server数据库三层生成
 - [ ] 自动生成网站后台
-- [x] 支持LayerUI框架后台管理界面
-- [ ] 支持Bootstrap框架后台管理界面
+- [x] 支持LayerUI框架后台管理模板
+- [ ] 支持AdminLTE框架后台管理模板
 
 &nbsp;
 
