@@ -49,6 +49,7 @@
     <Compile Include="DBFactory.cs" />
     <Compile Include="DbHelperPostgreSQL.cs" />
     <Compile Include="DBModel.cs" />
+    <Compile Include="HanderAdmin.cs" />
     <Compile Include="MySQL.cs" />
     <Compile Include="Oracle.cs" />
     <Compile Include="PostgreSQL.cs" />

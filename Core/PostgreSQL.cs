@@ -67,6 +67,7 @@ namespace Core
                 CreateModel(table_name, table_comment, dsTables);
                 CreateDAL(table_name, table_comment, dsTables);
                 CreateBLL(table_name, table_comment, dsTables);
+                CreateHanderAdmin(table_name, table_comment, dsTables);
             }
         }
 
@@ -82,10 +83,6 @@ namespace Core
         /// <param name="ds"></param>
         private void CreateModel(string table_name, string table_comment, DataSet ds)
         {
-            if (table_name == "dm_organization_structure")
-            {
-                Console.WriteLine("dd");
-            }
             Directory.CreateDirectory(cur_dir + "/Model");
             StringBuilder sb = new StringBuilder();
             sb.Append(@"using System;
@@ -653,6 +650,34 @@ namespace BLL
 
         }
 
+        /// <summary>
+        /// 创建HanderAdmin层
+        /// </summary>
+        /// <param name="table_name">表名称</param>
+        /// <param name="table_comment">表说明</param>
+        /// <param name="ds"></param>
+        private void CreateHanderAdmin(string table_name, string table_comment, DataSet ds)
+        {
+            //创建BDHelper
+            DbHelperPostgreSQL dbPGHelp = new DbHelperPostgreSQL(this.ConnectString);
+            DirectoryInfo dir = Directory.CreateDirectory(cur_dir + "/HandAdmin");
+
+            //查询主键
+            //string keyColName = "";
+            //string keyTypeName = "";
+
+            //string strSql = "select pg_constraint.conname as pk_name,pg_attribute.attname as colname,pg_type.typname as typename from pg_constraint inner join pg_class on pg_constraint.conrelid = pg_class.oid inner join pg_attribute on pg_attribute.attrelid = pg_class.oid and pg_attribute.attnum = pg_constraint.conkey[1] inner join pg_type on pg_type.oid = pg_attribute.atttypid where pg_class.relname = '" + table_name + "' and pg_constraint.contype='p'";
+            //DataSet dsKey = dbPGHelp.Query(strSql.ToString());
+            //if (dsKey != null && dsKey.Tables[0].Rows.Count > 0)
+            //{
+            //    keyColName = dsKey.Tables[0].Rows[0]["colname"].ToString(); ;
+            //    keyTypeName = dsKey.Tables[0].Rows[0]["typename"].ToString();
+            //}
+
+            HanderAdmin ha = new HanderAdmin(dir.FullName.ToString());
+            ha.CreateHanderAdmin(table_name, table_comment,ds);
+        }
+
 
 
         private string GetNpgsqlType(string dbType)
@@ -714,10 +739,6 @@ namespace BLL
                     return "";
             }
         }
-
-        #endregion
-
-        #region 创建一般处理程序
 
         #endregion
 
