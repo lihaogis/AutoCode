@@ -675,7 +675,7 @@ namespace BLL
             //}
 
             HanderAdmin ha = new HanderAdmin(dir.FullName.ToString());
-            ha.CreateHanderAdmin(table_name, table_comment,ds);
+            ha.CreateHanderAdmin(table_name, table_comment, ds);
         }
 
 
@@ -695,6 +695,8 @@ namespace BLL
                 case "numeric":
                 case "int2":
                     return "Integer";
+                case "double":
+                    return "double";
                 default:
                     return "";
             }
@@ -715,6 +717,8 @@ namespace BLL
                 case "numeric":
                 case "int2":
                     return "int";
+                case "double":
+                    return "double";
                 default:
                     return "";
             }
@@ -735,6 +739,8 @@ namespace BLL
                 case "numeric":
                 case "int2":
                     return "ToInt32";
+                case "double":
+                    return "double";
                 default:
                     return "";
             }
