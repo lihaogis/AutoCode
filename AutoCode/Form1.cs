@@ -18,7 +18,7 @@ namespace AutoCode
             InitializeComponent();
         }
 
-        string connectString = "SERVER=119.3.202.16;PORT=5432;DATABASE=bimgis;USER ID=postgres;PASSWORD=meitu001";
+        string connectString = "SERVER=127.0.0.1;PORT=5432;DATABASE=bimgis;USER ID=postgres;PASSWORD=meitu001";
         string dbType = "PostgreSQL";
 
         private void Form1_Load(object sender, EventArgs e)
