@@ -687,6 +687,7 @@ namespace BLL
                 case "int8":
                     return "Bigint";
                 case "varchar":
+                case "bool":
                 case "bpchar":
                     return "Varchar";
                 case "timestamp":
@@ -709,6 +710,7 @@ namespace BLL
                 case "int8":
                     return "long";
                 case "varchar":
+                case "bool":
                 case "bpchar":
                     return "string";
                 case "timestamp":
@@ -731,6 +733,7 @@ namespace BLL
                 case "int8":
                     return "ToInt64";
                 case "varchar":
+                case "bool":
                 case "bpchar":
                     return "ToString";
                 case "timestamp":
